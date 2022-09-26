@@ -51,19 +51,19 @@ if __name__ == '__main__':
         print(f"[INFO] Service ETL is Running .....")
         df = pd.read_sql(query, engine)
 
-        #upload local
-        path = os.getcwd()
-        directory = path+'/'+'local'+'/'
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        df.to_csv(f"{directory}dim_orders_{filetime}.csv", index=False)
-        print(f"[INFO] Upload Data in LOCAL Success .....")
+        # #upload local
+        # path = os.getcwd()
+        # directory = path+'/'+'local'+'/'
+        # if not os.path.exists(directory):
+        #     os.makedirs(directory)
+        # df.to_csv(f"{directory}dim_orders_{filetime}.csv", index=False)
+        # print(f"[INFO] Upload Data in LOCAL Success .....")
 
-        #insert dwh
-        cursor_dwh.execute(query_dwh)
-        conn_dwh.commit()
-        df.to_sql('dim_orders', engine_dwh, if_exists='replace', index=False)
-        print(f"[INFO] Update DWH Success .....")
+        # #insert dwh
+        # cursor_dwh.execute(query_dwh)
+        # conn_dwh.commit()
+        # df.to_sql('dim_orders', engine_dwh, if_exists='replace', index=False)
+        # print(f"[INFO] Update DWH Success .....")
 
         #spark processing
         sparkDF = spark.createDataFrame(df)
@@ -72,8 +72,7 @@ if __name__ == '__main__':
                   FROM MonthlyTotal \
                   group by month \
                   order by month asc")
-        sqlDF.toPandas().to_csv(f'MonthlyTotal.csv', index=False)
-
+        sqlDF.toPandas().to_csv(f'/mnt/e/dataengineer/project/dataprocessing_spark/output.csv', index=False)
 
         print(f"[INFO] Service ETL is Success .....")
     except:
